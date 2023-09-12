@@ -202,6 +202,8 @@ impl SiImage {
             }
         }
 
+        self.image = image.clone();
+
         SiImage {
             font: self.font.clone(),
             image,
