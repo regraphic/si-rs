@@ -72,8 +72,8 @@ impl SiFont {
 pub struct SiImage {
     font: SiFont,
     image: DynamicImage,
-    pub height: u32,
-    pub width: u32,
+    height: u32,
+    width: u32,
 }
 
 #[wasm_bindgen]
