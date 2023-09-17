@@ -178,6 +178,7 @@ impl SiImage {
     /// * `pos_x` - The X-coordinate position for rendering.
     /// * `pos_y` - The Y-coordinate position for rendering.
     /// * `color` - The color of the rendered text in hexadecimal format (e.g., "#RRGGBB").
+    #[wasm_bindgen]
     pub fn text(
         &mut self,
         text: &str,
@@ -228,6 +229,7 @@ impl SiImage {
     }
 
     /// Gets the image data as bytes in PNG format.
+    #[wasm_bindgen]
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut v = std::io::Cursor::new(Vec::new());
         self.image
@@ -241,17 +243,20 @@ impl SiImage {
     /// # Arguments
     ///
     /// * `font` - The SiFont to set as the font.
-    pub fn font(&mut self, font: SiFont) -> SiImage {
+    #[wasm_bindgen(setter)]
+    pub fn set_font(&mut self, font: SiFont) -> SiImage {
         self.font = font;
         self.clone()
     }
 
     /// Gets the height of the image.
+    #[wasm_bindgen(getter)]
     pub fn height(&self) -> u32 {
         self.height
     }
 
     /// Gets the width of the image.
+    #[wasm_bindgen(getter)]
     pub fn width(&self) -> u32 {
         self.width
     }
