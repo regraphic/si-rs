@@ -1,6 +1,6 @@
 # Si Crate - Simple Image Manipulation in Rust
 
-The Si crate (pronounced "ess-eye") is a lightweight and easy-to-use Rust library to create Social Share Images (the website previews you see, for example).  
+The Si crate (pronounced "ess-eye") is a lightweight and easy-to-use Rust library to create Social Share Images (the website previews you see, for example).
 
 See the examples in `examples` to get started.
 
@@ -12,7 +12,7 @@ To use the Si crate in your Rust project, add it as a dependency in your `Cargo.
 
 ```toml
 [dependencies]
-si-img = "0.1"
+si-img = "0.2.0"
 ```
 
 ## Getting Started
@@ -26,19 +26,19 @@ use si_img::{SiImage, SiFont};
 
 ## Creating a Font
 
-You can create a custom font using the `SiFont::new` constructor. You need to provide a font URL and, optionally, font bytes if you have them. Here's an example:
+You can create a custom font using the `SiFont::from_network` constructor. You need to provide a font URL. Here's an example:
 
-```rust { excludeFromRunAll=true }
+```rust
 let font = SiFont::new("FONT_URL", None); // Second param is font bytes
 
 ```
 
 ## Creating an Image
 
-Next, create an image using the `SiImage::new` constructor. You'll need to provide an image URL, the font you created earlier, and optionally, image bytes if available:
+Next, create an image using the `SiImage::from_network` constructor. You'll need to provide an image URL and the font you created earlier:
 
 ```rust
-let img = SiImage::new("Image_URL", font, None); // Third param is img bytes
+let img = SiImage::from_network("Image_URL", font); // Third param is img bytes
 
 ```
 
@@ -53,10 +53,10 @@ img.text("Hello Cool User", 48.00, 32.0, 20.0, Some("#00ffff".to_string()));
 
 ## Getting Image Bytes
 
-Finally, you can retrieve the (decoded) image as bytes using the `as_bytes` method:
+Finally, you can retrieve the (decoded) image as bytes using the `to_bytes` method:
 
 ```rust
-let bytes = img.as_bytes();
+let bytes = img.to_bytes();
 
 ```
 
@@ -69,16 +69,16 @@ use si_img::{SiImage, SiFont};
 
 fn main() {
     // Create a font
-    let font = SiFont::new("FONT_URL", None);
+    let font = SiFont::from_network("FONT_URL");
 
     // Create an image
-    let img = SiImage::new("Image_URL", font, None);
+    let img = SiImage::from_network("Image_URL", font);
 
     // Add text to the image
     img.text("Hello Cool User", 48.00, 32.0, 20.0, Some("#00ffff".to_string()));
 
     // Get image bytes
-    let bytes = img.as_bytes();
+    let bytes = img.to_bytes();
 
     // Do something with the image bytes (e.g., save to a file or send over a network)
 }
