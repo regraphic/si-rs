@@ -19,7 +19,7 @@ impl SiFont {
     }
 
     /// Creates a new SiFont from a vector of font data.
-    #[wasm_bindgen(js_name = "from_vec")]
+    #[wasm_bindgen]
     pub fn from_vec(vec: Vec<u8>) -> SiFont {
         let font = Font::try_from_vec(vec);
         SiFont { font }
@@ -30,7 +30,7 @@ impl SiFont {
     /// # Arguments
     ///
     /// * `url` - The URL from which to fetch the font data.
-    #[wasm_bindgen(js_name = "from_network")]
+    #[wasm_bindgen]
     #[cfg(feature = "async")]
     pub async fn from_network_async(url: &str) -> Result<SiFont, JsValue> {
         let font_data: Vec<u8> = reqwest::get(url)
@@ -98,7 +98,7 @@ impl SiImage {
     }
 
     /// Creates a new SiImage from a vector of image data.
-    #[wasm_bindgen(js_name = "from_vec")]
+    #[wasm_bindgen]
     pub fn from_vec(vec: Vec<u8>, font: SiFont) -> SiImage {
         let image = image::load_from_memory(&vec).expect("Could not decode image");
         let (width, height) = image.dimensions();
@@ -111,7 +111,7 @@ impl SiImage {
     ///
     /// * `image_url` - The URL from which to fetch the image data.
     /// * `font` - The SiFont used for text rendering on the image.
-    #[wasm_bindgen(js_name = "from_network")]
+    #[wasm_bindgen]
     #[cfg(feature = "async")]
     pub async fn from_network_async(image_url: &str, font: SiFont) -> SiImage {
         let image_data: Vec<u8> = reqwest::get(image_url)
