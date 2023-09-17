@@ -22,7 +22,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .await;
         let mut img = img
             .text("Hello, World!", 64.0, 480.00, 254.00, None)
-            .font(arial)
+            .set_font(arial)
             .text("Finally, it freaking works!", 48.0, 480.00, 320.0, None);
         // let mut new_img = SiImage{font: arial, image: img};
         // // let mut file = File::create("output_1.png").expect("Could not create bytes");
