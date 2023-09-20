@@ -1,4 +1,4 @@
-use image::{DynamicImage, GenericImage, GenericImageView, Rgb, Rgba};
+use image::{DynamicImage, GenericImage, GenericImageView, Rgb, Rgba, RgbaImage};
 use reqwest;
 use rusttype::{point, Font, Scale};
 use wasm_bindgen::prelude::*;
@@ -102,7 +102,12 @@ impl SiImage {
     pub fn from_vec(vec: Vec<u8>, font: SiFont) -> SiImage {
         let image = image::load_from_memory(&vec).expect("Could not decode image");
         let (width, height) = image.dimensions();
-        SiImage { image, height, width, font }
+        SiImage {
+            image,
+            height,
+            width,
+            font,
+        }
     }
 
     /// Creates a new SiImage from image data fetched from a network URL asynchronously.
@@ -115,12 +120,12 @@ impl SiImage {
     #[cfg(feature = "async")]
     pub async fn from_network_async(image_url: &str, font: SiFont) -> SiImage {
         let image_data: Vec<u8> = reqwest::get(image_url)
-                .await
-                .expect("Could not fetch image")
-                .bytes()
-                .await
-                .expect("Could not extract image")
-                .into();
+            .await
+            .expect("Could not fetch image")
+            .bytes()
+            .await
+            .expect("Could not extract image")
+            .into();
         let image = image::load_from_memory(&image_data).expect("Could not decode image");
         let (width, height) = image.dimensions();
         Self {
@@ -216,7 +221,7 @@ impl SiImage {
                             as u8,
                         ((parsed_color[2] as f32 * (v)) as f32 + (pixel[2] as f32 * (1.0 - v)))
                             as u8,
-                        (pixel[3] as f32 * (v)) as u8,
+                        255 as u8,
                     ]);
                     image.put_pixel(x as u32, y as u32, new_pixel);
                 });
@@ -284,6 +289,6 @@ pub fn hex_to_rgb(hex: &str) -> Option<Rgb<u8>> {
         let b = u8::from_str_radix(&hex[2..3].repeat(2), 16).ok()?;
         Some(Rgb([r, g, b]))
     } else {
-        Some(Rgb([0, 0, 0]))
+        Some(Rgb([255, 255, 255]))
     }
 }

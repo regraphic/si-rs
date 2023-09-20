@@ -1,6 +1,6 @@
 [package]
 name = "si-img"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 authors = ["ReGraphic Foundation <rajdeepm.dev+rg@gmail.com"]
 repository = "https://github.com/regraphic/si-rs"
