@@ -78,7 +78,6 @@ impl SiFont {
 #[wasm_bindgen]
 #[derive(Clone)]
 pub struct SiImage {
-    font: SiFont,
     image: DynamicImage,
     height: u32,
     width: u32,
@@ -91,22 +90,20 @@ impl SiImage {
     /// # Arguments
     ///
     /// * `src` - The vector of image data.
-    /// * `font` - The SiFont used for text rendering on the image.
     #[wasm_bindgen(constructor)]
-    pub fn new(src: Vec<u8>, font: SiFont) -> Self {
-        Self::from_vec(src, font)
+    pub fn new(src: Vec<u8>) -> Self {
+        Self::from_vec(src)
     }
 
     /// Creates a new SiImage from a vector of image data.
     #[wasm_bindgen]
-    pub fn from_vec(vec: Vec<u8>, font: SiFont) -> SiImage {
+    pub fn from_vec(vec: Vec<u8>) -> SiImage {
         let image = image::load_from_memory(&vec).expect("Could not decode image");
         let (width, height) = image.dimensions();
         SiImage {
             image,
             height,
             width,
-            font,
         }
     }
 
@@ -115,10 +112,9 @@ impl SiImage {
     /// # Arguments
     ///
     /// * `image_url` - The URL from which to fetch the image data.
-    /// * `font` - The SiFont used for text rendering on the image.
     #[wasm_bindgen]
     #[cfg(feature = "async")]
-    pub async fn from_network_async(image_url: &str, font: SiFont) -> SiImage {
+    pub async fn from_network_async(image_url: &str) -> SiImage {
         let image_data: Vec<u8> = reqwest::get(image_url)
             .await
             .expect("Could not fetch image")
@@ -129,7 +125,6 @@ impl SiImage {
         let image = image::load_from_memory(&image_data).expect("Could not decode image");
         let (width, height) = image.dimensions();
         Self {
-            font,
             image,
             height,
             width,
@@ -138,7 +133,7 @@ impl SiImage {
 
     /// Placeholder method for when async feature is not enabled.
     #[cfg(not(feature = "async"))]
-    pub fn from_network_async(_image_url: &str, _font: SiFont) {
+    pub fn from_network_async(_image_url: &str) {
         panic!("async feature not enabled")
     }
 
@@ -147,9 +142,8 @@ impl SiImage {
     /// # Arguments
     ///
     /// * `image_url` - The URL from which to fetch the image data.
-    /// * `font` - The SiFont used for text rendering on the image.
     #[cfg(feature = "blocking")]
-    pub fn from_network(image_url: &str, font: SiFont) -> SiImage {
+    pub fn from_network(image_url: &str) -> SiImage {
         // Load image data from either URL or provided bytes.
         let image_data: Vec<u8> = reqwest::blocking::get(image_url)
             .expect("Could not fetch image")
@@ -161,7 +155,6 @@ impl SiImage {
         let (width, height) = image.dimensions();
 
         Self {
-            font,
             image,
             height,
             width,
@@ -170,7 +163,7 @@ impl SiImage {
 
     /// Placeholder method for when blocking feature is not enabled.
     #[cfg(not(feature = "blocking"))]
-    pub fn from_network(image_url: &str, font: SiFont) {
+    pub fn from_network(image_url: &str) {
         panic!("blocking feature not enabled")
     }
 
@@ -183,18 +176,19 @@ impl SiImage {
     /// * `pos_x` - The X-coordinate position for rendering.
     /// * `pos_y` - The Y-coordinate position for rendering.
     /// * `color` - The color of the rendered text in hexadecimal format (e.g., "#RRGGBB").
-    #[wasm_bindgen]
-    pub fn text(
+    /// * `using_font` - The SiFont used for text rendering on the image.
+    #[wasm_bindgen(js_name = "text")]
+    pub fn render_text(
         &mut self,
         text: &str,
         text_scale: f32,
         pos_x: f32,
         pos_y: f32,
         color: Option<String>,
+        using_font: SiFont
     ) -> SiImage {
         let mut image = self.image.clone();
-        let font = self
-            .font
+        let font = using_font
             .font
             .as_ref()
             .ok_or("Error loading font")
@@ -241,17 +235,6 @@ impl SiImage {
             .write_to(&mut v, image::ImageFormat::Png)
             .expect("Could not write bytes");
         v.into_inner()
-    }
-
-    /// Sets the font for text rendering on the image.
-    ///
-    /// # Arguments
-    ///
-    /// * `font` - The SiFont to set as the font.
-    #[wasm_bindgen(setter)]
-    pub fn set_font(&mut self, font: SiFont) -> SiImage {
-        self.font = font;
-        self.clone()
     }
 
     /// Gets the height of the image.

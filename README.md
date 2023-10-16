@@ -29,25 +29,25 @@ use si_img::{SiImage, SiFont};
 You can create a custom font using the `SiFont::from_network` constructor. You need to provide a font URL. Here's an example:
 
 ```rust
-let font = SiFont::new("FONT_URL", None); // Second param is font bytes
+let font = SiFont::from_network("FONT_URL"); // Synchronously (blocking, use SiFont::from_network_async for async fetching)
 
 ```
 
 ## Creating an Image
 
-Next, create an image using the `SiImage::from_network` constructor. You'll need to provide an image URL and the font you created earlier:
+Next, create an image using the `SiImage::from_network` constructor. You'll need to provide an image URL:
 
 ```rust
-let img = SiImage::from_network("Image_URL", font); // Third param is img bytes
+let img = SiImage::from_network("Image_URL"); // Synchronously (blocking, use SiImage::from_network_async for async fetching)
 
 ```
 
 ## Adding Text to the Image
 
-Now, you can add text to the image using the `text` method. Specify the text, scale, x and y coordinates, and an optional color (or use `None` for the default color):
+Now, you can add text to the image using the `text` method. Specify the text, scale, x and y coordinates, an optional color (or use `None` for the default color), and the font you created earlier:
 
 ```rust
-img.text("Hello Cool User", 48.00, 32.0, 20.0, Some("#00ffff".to_string()));
+img.text("Hello Cool User", 48.00, 32.0, 20.0, Some("#00ffff".to_string()), font);
 
 ```
 
@@ -72,10 +72,10 @@ fn main() {
     let font = SiFont::from_network("FONT_URL");
 
     // Create an image
-    let img = SiImage::from_network("Image_URL", font);
+    let img = SiImage::from_network("Image_URL");
 
     // Add text to the image
-    img.text("Hello Cool User", 48.00, 32.0, 20.0, Some("#00ffff".to_string()));
+    img.text("Hello Cool User", 48.00, 32.0, 20.0, Some("#00ffff".to_string()), font);
 
     // Get image bytes
     let bytes = img.to_bytes();
