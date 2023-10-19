@@ -1,4 +1,4 @@
-use image::{DynamicImage, GenericImage, GenericImageView, Rgb, Rgba, RgbaImage};
+use image::{DynamicImage, GenericImage, GenericImageView, Rgb, Rgba, imageops::{overlay, resize}};
 use reqwest;
 use rusttype::{point, Font, Scale};
 use wasm_bindgen::prelude::*;
@@ -177,15 +177,19 @@ impl SiImage {
     /// * `pos_y` - The Y-coordinate position for rendering.
     /// * `color` - The color of the rendered text in hexadecimal format (e.g., "#RRGGBB").
     /// * `using_font` - The SiFont used for text rendering on the image.
+    /// 
+    /// # Returns
+    /// 
+    /// A mutable instance of the main image, with the text rendered on it.
     #[wasm_bindgen(js_name = "text")]
     pub fn render_text(
-        &mut self,
+        mut self,
         text: &str,
         text_scale: f32,
         pos_x: f32,
         pos_y: f32,
         color: Option<String>,
-        using_font: SiFont
+        using_font: SiFont,
     ) -> SiImage {
         let mut image = self.image.clone();
         let font = using_font
@@ -222,14 +226,34 @@ impl SiImage {
             }
         }
 
-        self.image = image;
+        let _ = std::mem::replace(&mut self.image, image);
+        self
+    }
 
-        self.clone()
+    /// Renders some image into the image
+    /// 
+    /// # Arguments
+    ///
+    /// * `image` - The SiImage to render.
+    /// * `pos_x` - The X-coordinate position for rendering.
+    /// * `pos_y` - The Y-coordinate position for rendering.
+    /// 
+    /// # Returns
+    /// 
+    /// A mutable instance of the main image, with overlay of the provided one
+    #[wasm_bindgen(js_name = "image")]
+    pub fn render_image(mut self, image: SiImage, pos_x: i64, pos_y: i64) -> SiImage {
+        overlay(&mut self.image, &image.image, pos_x, pos_y);
+        self
     }
 
     /// Gets the image data as bytes in PNG format.
+    /// 
+    /// # Returns
+    /// 
+    /// The image data as bytes in PNG format
     #[wasm_bindgen]
-    pub fn to_bytes(&self) -> Vec<u8> {
+    pub fn to_bytes(self) -> Vec<u8> {
         let mut v = std::io::Cursor::new(Vec::new());
         self.image
             .write_to(&mut v, image::ImageFormat::Png)
@@ -238,15 +262,42 @@ impl SiImage {
     }
 
     /// Gets the height of the image.
+    /// 
+    /// # Returns
+    /// 
+    /// The height of the image
     #[wasm_bindgen(getter)]
-    pub fn height(&self) -> u32 {
+    pub fn height(self) -> u32 {
         self.height
     }
 
     /// Gets the width of the image.
+    /// 
+    /// # Returns
+    /// 
+    /// The width of the image
     #[wasm_bindgen(getter)]
-    pub fn width(&self) -> u32 {
+    pub fn width(self) -> u32 {
         self.width
+    }
+
+    /// Resizes the image
+    /// 
+    /// # Arguments
+    /// 
+    /// * `width` - The new width of the image
+    /// * `height` - The new height of the image
+    /// 
+    /// # Returns
+    /// 
+    /// A mutable instance of the main image, with the resized image
+    #[wasm_bindgen]
+    pub fn resize(mut self, width: u32, height: u32) -> SiImage {
+        let new_image = DynamicImage::ImageRgba8(resize(&self.image, width, height, image::imageops::FilterType::Triangle));
+        let _ = std::mem::replace(&mut self.image, new_image);
+        let _ = std::mem::replace(&mut self.width, width);
+        let _ = std::mem::replace(&mut self.height, height);
+        self
     }
 }
 
