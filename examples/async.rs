@@ -15,11 +15,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         )
         .await
         .expect("Could not load font");
-        let mut img = SiImage::from_network_async(
+        let img = SiImage::from_network_async(
             "https://res.cloudinary.com/zype/image/upload/w_1200,h_650/CodeWithR/Template.png"
         )
         .await;
-        let mut img = img
+        let img = img
             .render_text("Hello, World!", 64.0, 480.00, 254.00, None, sirin)
             .render_text("Finally, it works!", 48.0, 480.00, 320.0, None, arial);
         let mut file = File::create("output_async.png").expect("Could not create bytes");
