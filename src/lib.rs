@@ -1,7 +1,21 @@
-use image::{DynamicImage, GenericImage, GenericImageView, Rgb, Rgba, imageops::{overlay, resize}};
+use image::{
+    imageops::{overlay, resize},
+    DynamicImage, GenericImage, GenericImageView, Rgb, Rgba,
+};
 use reqwest;
 use rusttype::{point, Font, Scale};
 use wasm_bindgen::prelude::*;
+
+/// Represents a Preset
+pub struct SiPreset {
+    pub cb: Box<dyn Fn(&mut SiImage, std::collections::HashMap<String, Box<dyn std::any::Any>>) -> SiImage>,
+}
+
+impl SiPreset {
+    pub fn new(cb: Box<dyn Fn(&mut SiImage, std::collections::HashMap<String, Box<dyn std::any::Any>>) -> SiImage>) -> Box<SiPreset> {
+        Box::new(SiPreset { cb: Box::new(cb) })
+    }
+}
 
 /// Represents a font used for text rendering.
 #[wasm_bindgen]
@@ -177,9 +191,9 @@ impl SiImage {
     /// * `pos_y` - The Y-coordinate position for rendering.
     /// * `color` - The color of the rendered text in hexadecimal format (e.g., "#RRGGBB").
     /// * `using_font` - The SiFont used for text rendering on the image.
-    /// 
+    ///
     /// # Returns
-    /// 
+    ///
     /// A mutable instance of the main image, with the text rendered on it.
     #[wasm_bindgen(js_name = "text")]
     pub fn render_text(
@@ -231,15 +245,15 @@ impl SiImage {
     }
 
     /// Renders some image into the image
-    /// 
+    ///
     /// # Arguments
     ///
     /// * `image` - The SiImage to render.
     /// * `pos_x` - The X-coordinate position for rendering.
     /// * `pos_y` - The Y-coordinate position for rendering.
-    /// 
+    ///
     /// # Returns
-    /// 
+    ///
     /// A mutable instance of the main image, with overlay of the provided one
     #[wasm_bindgen(js_name = "image")]
     pub fn render_image(mut self, image: SiImage, pos_x: i64, pos_y: i64) -> SiImage {
@@ -248,9 +262,9 @@ impl SiImage {
     }
 
     /// Gets the image data as bytes in PNG format.
-    /// 
+    ///
     /// # Returns
-    /// 
+    ///
     /// The image data as bytes in PNG format
     #[wasm_bindgen]
     pub fn to_bytes(self) -> Vec<u8> {
@@ -262,9 +276,9 @@ impl SiImage {
     }
 
     /// Gets the height of the image.
-    /// 
+    ///
     /// # Returns
-    /// 
+    ///
     /// The height of the image
     #[wasm_bindgen(getter)]
     pub fn height(self) -> u32 {
@@ -272,9 +286,9 @@ impl SiImage {
     }
 
     /// Gets the width of the image.
-    /// 
+    ///
     /// # Returns
-    /// 
+    ///
     /// The width of the image
     #[wasm_bindgen(getter)]
     pub fn width(self) -> u32 {
@@ -282,21 +296,36 @@ impl SiImage {
     }
 
     /// Resizes the image
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `width` - The new width of the image
     /// * `height` - The new height of the image
-    /// 
+    ///
     /// # Returns
-    /// 
+    ///
     /// A mutable instance of the main image, with the resized image
     #[wasm_bindgen]
     pub fn resize(mut self, width: u32, height: u32) -> SiImage {
-        let new_image = DynamicImage::ImageRgba8(resize(&self.image, width, height, image::imageops::FilterType::Triangle));
+        let new_image = DynamicImage::ImageRgba8(resize(
+            &self.image,
+            width,
+            height,
+            image::imageops::FilterType::Triangle,
+        ));
         let _ = std::mem::replace(&mut self.image, new_image);
         let _ = std::mem::replace(&mut self.width, width);
         let _ = std::mem::replace(&mut self.height, height);
+        self
+    }
+}
+
+impl SiImage {
+    /// Load a preset.
+    /// **NOTE**: It doesn't work in WASM. Only for direct usage.
+    pub fn load_preset(&mut self, preset: Box<SiPreset>, values: std::collections::HashMap<String, Box<dyn std::any::Any>>) -> &mut SiImage {
+        let res = (preset.cb)(self, values);
+        let _ = std::mem::replace(self, res);
         self
     }
 }
