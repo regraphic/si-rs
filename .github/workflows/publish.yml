@@ -16,13 +16,14 @@ jobs:
     uses: denoland/setup-deno@v1
     with:
       deno-version: v1.x
-      
+
   - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
+    uses: actions-rs/toolchain@v1
+    with:
+      profile: minimal
+      toolchain: stable
+      override: true
+
   - name: Prepare for publishing
     run: deno run -Ar scripts/prepare.ts --version=${{ inputs.version }}
 
