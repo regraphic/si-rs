@@ -23,7 +23,10 @@ jobs:
           deno-version: v1.x
 
       - name: Prepare for publishing
-        run: deno run -Ar scripts/prepare.ts --version=${{ inputs.version }}
+        run: |
+        deno run -Ar scripts/prepare.ts --version=${{ inputs.version }}
+        git add -A
+        git commit -s -m "v${{ inputs.version }}"
 
 
       - name: Install stable toolchain
