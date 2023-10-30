@@ -25,6 +25,8 @@ jobs:
       - name: Prepare for publishing
         run: |
           deno run -Ar scripts/prepare.ts --version=${{ inputs.version }}
+          git config --global user.email "rajdeepm.dev@gmail.com"
+          git config --global user.name "ReGraphic Foundation"
           git add -A
           git commit -s -m "v${{ inputs.version }}"
 
