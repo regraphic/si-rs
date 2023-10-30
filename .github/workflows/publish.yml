@@ -10,24 +10,33 @@ on:
         type: string
 
 jobs:
-  - name: Checkout
-    uses: actions/checkout@v3
-  - name: Install Deno
-    uses: denoland/setup-deno@v1
-    with:
-      deno-version: v1.x
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-  - name: Install stable toolchain
-    uses: actions-rs/toolchain@v1
-    with:
-      profile: minimal
-      toolchain: stable
-      override: true
+      - name: Install Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+          
+      - name: Prepare for publishing
+        run: deno run -Ar scripts/prepare.ts --version=${{ inputs.version }}
 
-  - name: Prepare for publishing
-    run: deno run -Ar scripts/prepare.ts --version=${{ inputs.version }}
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
 
-  - name: Publish
-    run: cargo publish --token ${CRATES_TOKEN}
-    env:
-      CRATES_TOKEN: ${{ secrets.CRATES_TOKEN }}
+      - name: Publish
+        run: cargo publish --token ${CRATES_TOKEN}
+        env:
+          CRATES_TOKEN: ${{ secrets.CRATES_TOKEN }}
