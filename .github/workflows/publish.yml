@@ -1,0 +1,32 @@
+name: Publish
+run-name: Publishing ${{ inputs.version }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "The version of crate"
+        required: true
+        type: string
+
+jobs:
+  - name: Checkout
+    uses: actions/checkout@v3
+  - name: Install Deno
+    uses: denoland/setup-deno@v1
+    with:
+      deno-version: v1.x
+      
+  - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+  - name: Prepare for publishing
+    run: deno run -Ar scripts/prepare.ts --version=${{ inputs.version }}
+
+  - name: Publish
+    run: cargo publish --token ${CRATES_TOKEN}
+    env:
+      CRATES_TOKEN: ${{ secrets.CRATES_TOKEN }}
