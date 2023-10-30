@@ -1,4 +1,6 @@
 # Si Crate - Simple Image Manipulation in Rust
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fregraphic%2Fsi-rs.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fregraphic%2Fsi-rs?ref=badge_shield)
+
 
 The Si crate (pronounced "ess-eye") is a lightweight and easy-to-use Rust library to create Social Share Images (the website previews you see, for example).
 
@@ -88,3 +90,6 @@ fn main() {
 That's it! You now have the basics to start using the Si crate for simple image manipulation in your Rust projects. Feel free to explore more features and customization options provided by the crate as you build your image processing applications.
 
 > **Note**: This Crate serves as the base for the WebAssembly-based `Si.js` library (for Node.js and Deno).
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fregraphic%2Fsi-rs.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fregraphic%2Fsi-rs?ref=badge_large)
