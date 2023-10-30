@@ -1,8 +1,8 @@
 // Prepare ShareImage for publishing
 import { parse, stringify } from "https://deno.land/x/std@0.204.0/toml/mod.ts";
-import { parse } from "https://deno.land/std@0.202.0/flags/mod.ts";
+import { parse: parseFlags } from "https://deno.land/std@0.202.0/flags/mod.ts";
 
-const flags = parse(Deno.args, {
+const flags = parseFlags(Deno.args, {
   string: ["version"],
 });
 
