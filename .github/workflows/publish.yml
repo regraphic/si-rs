@@ -10,8 +10,8 @@ on:
         type: string
 
 jobs:
-  prepare:
-    name: Prepare
+  prepare_and_publish:
+    name: Publish
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,10 +25,7 @@ jobs:
       - name: Prepare for publishing
         run: deno run -Ar scripts/prepare.ts --version=${{ inputs.version }}
 
-  publish:
-    name: Publish
-    runs-on: ubuntu-latest
-    steps:
+
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
         with:
