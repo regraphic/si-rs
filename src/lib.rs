@@ -208,7 +208,8 @@ impl SiImage {
         let mut image = self.image.clone();
         let mut font = using_font
             .font
-            .clone();
+            .clone()
+            .expect("Could not load font");
         let scale = Scale::uniform(text_scale);
         let v_metrics = font.v_metrics(scale);
         let offset = point(pos_x, pos_y + v_metrics.ascent);
