@@ -206,8 +206,8 @@ impl SiImage {
         using_font: SiFont,
     ) -> SiImage {
         let mut image = self.image.clone();
-        let _font = using_font
-            .font
+        let font_ref = std::rc::Rc::new(using_font.clone().font.clone());
+        let _font = font_ref
             .clone();
         let font = _font
             .as_ref()
