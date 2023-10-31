@@ -203,12 +203,13 @@ impl SiImage {
         pos_x: f32,
         pos_y: f32,
         color: Option<String>,
-        using_font: SiFont,
+        using_font: &SiFont,
     ) -> SiImage {
         let mut image = self.image.clone();
         let _font = using_font
             .clone()
-            .font;
+            .font
+            .clone();
         let font = _font
             .as_ref()
             .ok_or("Could not reference font")
