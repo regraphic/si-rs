@@ -206,7 +206,7 @@ impl SiImage {
         using_font: SiFont,
     ) -> SiImage {
         let mut image = self.image.clone();
-        font = using_font
+        let mut font = using_font
             .font
             .clone();
         let scale = Scale::uniform(text_scale);
