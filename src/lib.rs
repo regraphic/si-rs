@@ -207,9 +207,7 @@ impl SiImage {
     ) -> SiImage {
         let mut image = self.image.clone();
         let _font = using_font
-            .clone()
-            .font
-            .clone();
+            .font;
         let font = _font
             .as_ref()
             .ok_or("Could not reference font")
