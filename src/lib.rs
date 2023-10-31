@@ -206,13 +206,9 @@ impl SiImage {
         using_font: SiFont,
     ) -> SiImage {
         let mut image = self.image.clone();
-        let _font = using_font
+        font = using_font
             .font
             .clone();
-        let font = _font
-            .as_ref()
-            .ok_or("Error loading font")
-            .expect("Could not decode/load font");
         let scale = Scale::uniform(text_scale);
         let v_metrics = font.v_metrics(scale);
         let offset = point(pos_x, pos_y + v_metrics.ascent);
