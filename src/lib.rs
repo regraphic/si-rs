@@ -206,9 +206,10 @@ impl SiImage {
         using_font: SiFont,
     ) -> SiImage {
         let mut image = self.image.clone();
-        let font = using_font
+        let _font = using_font
             .font
             .clone()
+        let font = _font
             .as_ref()
             .ok_or("Error loading font")
             .expect("Could not decode/load font");
