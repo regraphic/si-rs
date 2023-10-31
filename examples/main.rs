@@ -40,6 +40,14 @@ fn main() {
         254.00,
         Some("#00ffff".to_string()),
         font.clone(),
+    )
+    .render_text(
+        "Hello, Tagline!",
+        48.0,
+        480.0,
+        320.0,
+        None,
+        font.clone(),
     );
     let font = SiFont::from_network(
         "https://github.com/Zype-Z/ShareImage.js/raw/main/assets/fonts/arial.ttf",

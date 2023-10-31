@@ -12,7 +12,8 @@ To use the Si crate in your Rust project, add it as a dependency in your `Cargo.
 
 ```toml
 [dependencies]
-si-img = "0.2.0"
+si-img = "0.3.1"
+
 ```
 
 ## Getting Started
@@ -21,6 +22,7 @@ To start using the Si crate, import the necessary modules:
 
 ```rust
 use si_img::{SiImage, SiFont};
+
 
 ```
 
@@ -31,6 +33,7 @@ You can create a custom font using the `SiFont::from_network` constructor. You n
 ```rust
 let font = SiFont::from_network("FONT_URL"); // Synchronously (blocking, use SiFont::from_network_async for async fetching)
 
+
 ```
 
 ## Creating an Image
@@ -39,6 +42,7 @@ Next, create an image using the `SiImage::from_network` constructor. You'll need
 
 ```rust
 let img = SiImage::from_network("Image_URL"); // Synchronously (blocking, use SiImage::from_network_async for async fetching)
+
 
 ```
 
@@ -49,6 +53,7 @@ Now, you can add text to the image using the `text` method. Specify the text, sc
 ```rust
 img.text("Hello Cool User", 48.00, 32.0, 20.0, Some("#00ffff".to_string()), font);
 
+
 ```
 
 ## Getting Image Bytes
@@ -57,6 +62,7 @@ Finally, you can retrieve the (decoded) image as bytes using the `to_bytes` meth
 
 ```rust
 let bytes = img.to_bytes();
+
 
 ```
 
@@ -82,6 +88,7 @@ fn main() {
 
     // Do something with the image bytes (e.g., save to a file or send over a network)
 }
+
 
 ```
 

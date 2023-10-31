@@ -26,3 +26,6 @@ async = ["wasm-bindgen-futures"]
 
 [package.metadata.exclude]
 paths = ["examples/*"]
+
+[profile.release]
+opt-level = 3
