@@ -206,9 +206,12 @@ impl SiImage {
         using_font: SiFont,
     ) -> SiImage {
         let mut image = self.image.clone();
-        let mut font = using_font
+        let _font = using_font
             .font
-            .clone()
+            .clone();0
+        let font = _font
+            .as_ref()
+            .ok_or("Could not reference font")
             .expect("Could not load font");
         let scale = Scale::uniform(text_scale);
         let v_metrics = font.v_metrics(scale);
