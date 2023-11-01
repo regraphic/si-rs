@@ -1,31 +1,37 @@
+
 [package]
 name = "si-img"
-version = "0.3.0"
+version = "0.3.2"
 edition = "2021"
 authors = ["ReGraphic Foundation <rajdeepm.dev+rg@gmail.com"]
 repository = "https://github.com/regraphic/si-rs"
 description = "A simple and lightweight Rust library to generate Social Media Preview Images"
 license = "MIT"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[package.metadata.exclude]
+paths = ["examples/*"]
 
 [dependencies]
 image = "0.24.7"
-reqwest = { version = "0.11.19" }
 rusttype = "0.9.3"
-wasm-bindgen = {version = "0.2.87"}
-wasm-bindgen-futures = {version = "0.4.37", optional = true}
+
+[dependencies.reqwest]
+version = "0.11.19"
+
+[dependencies.wasm-bindgen]
+version = "0.2.87"
+
+[dependencies.wasm-bindgen-futures]
+version = "0.4.37"
+optional = true
 
 [lib]
-crate-type = ["cdylib", "rlib"]
+crate-type = ["cdylib","rlib"]
 
 [features]
-default = ["blocking", "async"]
+default = ["blocking","async"]
 blocking = ["reqwest/blocking"]
 async = ["wasm-bindgen-futures"]
-
-[package.metadata.exclude]
-paths = ["examples/*"]
 
 [profile.release]
 opt-level = 3
