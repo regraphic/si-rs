@@ -51,7 +51,7 @@ let img = SiImage::from_network("Image_URL"); // Synchronously (blocking, use Si
 Now, you can add text to the image using the `text` method. Specify the text, scale, x and y coordinates, an optional color (or use `None` for the default color), and the font you created earlier:
 
 ```rust
-img.text("Hello Cool User", 48.00, 32.0, 20.0, Some("#00ffff".to_string()), font);
+img.text("Hello Cool User", 48.00, 32.0, 20.0, Some("#00ffff".to_string()), &font);
 
 
 ```
@@ -81,7 +81,7 @@ fn main() {
     let img = SiImage::from_network("Image_URL");
 
     // Add text to the image
-    img.text("Hello Cool User", 48.00, 32.0, 20.0, Some("#00ffff".to_string()), font);
+    img.text("Hello Cool User", 48.00, 32.0, 20.0, Some("#00ffff".to_string()), &font);
 
     // Get image bytes
     let bytes = img.to_bytes();
