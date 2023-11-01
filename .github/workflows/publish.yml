@@ -1,6 +1,9 @@
 name: Publish
 run-name: Publishing ${{ inputs.version }}
 
+permissions:
+  contents: "write"
+
 on:
   workflow_dispatch:
     inputs:
