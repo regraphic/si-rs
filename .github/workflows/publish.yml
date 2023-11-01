@@ -29,8 +29,13 @@ jobs:
           git config --global user.name "ReGraphic Foundation"
           git add -A
           git commit -s -m "v${{ inputs.version }}"
-          git push
-
+      
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+          
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
         with:
