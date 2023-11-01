@@ -283,7 +283,7 @@ impl SiImage {
     ///
     /// The height of the image
     #[wasm_bindgen(getter)]
-    pub fn height(self) -> u32 {
+    pub fn height(&self) -> u32 {
         self.height
     }
 
@@ -293,7 +293,7 @@ impl SiImage {
     ///
     /// The width of the image
     #[wasm_bindgen(getter)]
-    pub fn width(self) -> u32 {
+    pub fn width(&self) -> u32 {
         self.width
     }
 

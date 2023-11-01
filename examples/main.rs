@@ -6,7 +6,7 @@ fn main() {
         "https://github.com/Zype-Z/ShareImage.js/raw/main/assets/fonts/sirin-stencil.ttf",
     );
     let preset = SiPreset::new(Box::new(|img: &mut SiImage, values: std::collections::HashMap<String, Box<dyn std::any::Any>>| {
-        println!("Dimensions: {}, {}", img.clone().width(), img.clone().height());
+        println!("Dimensions: {}, {}", img.width(), img.height());
         let font = match values.get("font") {
             Some(font) => {
                 if font.type_id() == TypeId::of::<SiFont>() {
