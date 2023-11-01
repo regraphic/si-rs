@@ -20,8 +20,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         )
         .await;
         let img = img
-            .render_text("Hello, World!", 64.0, 480.00, 254.00, None, sirin)
-            .render_text("Finally, it works!", 48.0, 480.00, 320.0, None, arial);
+            .render_text("Hello, World!", 64.0, 480.00, 254.00, None, &sirin)
+            .render_text("Finally, it works!", 48.0, 480.00, 320.0, None, &arial);
         let mut file = File::create("output_async.png").expect("Could not create bytes");
         image::load_from_memory(&img.to_bytes())
             .expect("Could not load image")
