@@ -269,7 +269,7 @@ impl SiImage {
     ///
     /// The image data as bytes in PNG format
     #[wasm_bindgen]
-    pub fn to_bytes(self) -> Vec<u8> {
+    pub fn to_bytes(&self) -> Vec<u8> {
         let mut v = std::io::Cursor::new(Vec::new());
         self.image
             .write_to(&mut v, image::ImageFormat::Png)
