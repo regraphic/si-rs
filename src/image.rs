@@ -173,7 +173,7 @@ impl SiImage {
     ///
     /// A mutable instance of the main image, with overlay of the provided one
     #[wasm_bindgen(js_name = "image")]
-    pub fn render_image(mut self, image: SiImage, pos_x: i64, pos_y: i64) -> SiImage {
+    pub fn render_image(mut self, image: &SiImage, pos_x: i64, pos_y: i64) -> SiImage {
         overlay(&mut self.image, &image.image, pos_x, pos_y);
         self
     }
