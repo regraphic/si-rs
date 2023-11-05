@@ -11,9 +11,8 @@ license = "MIT"
 [package.metadata.exclude]
 paths = ["examples/*"]
 
-[dependencies]
-image = "0.24.7"
-rusttype = "0.9.3"
+[dependencies.image]
+version = "0.24.7"
 
 [dependencies.reqwest]
 version = "0.11.19"
@@ -24,6 +23,9 @@ version = "0.2.87"
 [dependencies.wasm-bindgen-futures]
 version = "0.4.37"
 optional = true
+
+[dependencies.ab_glyph]
+version = "0.2.23"
 
 [lib]
 crate-type = ["cdylib","rlib"]

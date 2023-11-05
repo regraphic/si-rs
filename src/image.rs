@@ -1,9 +1,9 @@
+use ab_glyph::{Font, ScaleFont};
 use image::{
     imageops::{overlay, resize},
-    DynamicImage, GenericImage, GenericImageView, Rgb, Rgba,
+    DynamicImage, GenericImageView, Rgba, Rgb, GenericImage
 };
 use reqwest;
-use rusttype::{point, Scale};
 use wasm_bindgen::prelude::*;
 
 use crate::font::*;
@@ -127,41 +127,35 @@ impl SiImage {
         using_font: &SiFont,
     ) -> SiImage {
         let mut image = self.image.clone();
-        let _font = using_font
-            .clone()
-            .font;
-        let font = _font
-            .as_ref()
-            .ok_or("Could not reference font")
-            .expect("Could not load font");
-        let scale = Scale::uniform(text_scale);
-        let v_metrics = font.v_metrics(scale);
-        let offset = point(pos_x, pos_y + v_metrics.ascent);
+        let scale = text_scale;
+        let font = &using_font
+            .font
+            .as_scaled(scale);
+        let ascent = font.ascent();
 
         let parsed_color = match color.clone() {
             Some(c) => hex_to_rgb(&c).unwrap_or(Rgb([0, 0, 0])),
             None => Rgb([0, 0, 0]),
         };
-
-        for glyph in font.layout(text, scale, offset) {
-            if let Some(bb) = glyph.pixel_bounding_box() {
-                glyph.draw(|x, y, v| {
-                    let x = x as i32 + bb.min.x;
-                    let y = y as i32 + bb.min.y;
-                    let pixel = image.get_pixel(x as u32, y as u32);
-                    let new_pixel = Rgba([
-                        (((parsed_color[0] as f32 * (v)) as f32) + (pixel[0] as f32 * (1.0 - v)))
-                            as u8,
-                        ((parsed_color[1] as f32 * (v)) as f32 + (pixel[1] as f32 * (1.0 - v)))
-                            as u8,
-                        ((parsed_color[2] as f32 * (v)) as f32 + (pixel[2] as f32 * (1.0 - v)))
-                            as u8,
-                        255 as u8,
-                    ]);
-                    image.put_pixel(x as u32, y as u32, new_pixel);
-                });
-            }
-        }
+        for a in &using_font.layout(text, scale, Position {x: pos_x, y: pos_y + ascent}) {
+            let glyph = &a.glyph;
+            let bb = glyph.px_bounds();
+            glyph.draw(|_x, _y, v| {
+                let x = _x as u32 + bb.min.x as u32;
+                let y = _y as u32 + bb.min.y as u32;
+                let pixel = image.get_pixel(x as u32, y as u32);
+                let new_pixel = Rgba([
+                    (((parsed_color[0] as f32 * (v)) as f32) + (pixel[0] as f32 * (1.0 - v)))
+                        as u8,
+                    ((parsed_color[1] as f32 * (v)) as f32 + (pixel[1] as f32 * (1.0 - v)))
+                        as u8,
+                    ((parsed_color[2] as f32 * (v)) as f32 + (pixel[2] as f32 * (1.0 - v)))
+                        as u8,
+                    255 as u8,
+                ]);
+                image.put_pixel(x as u32, y as u32, new_pixel);
+        });
+    }
 
         let _ = std::mem::replace(&mut self.image, image);
         self
