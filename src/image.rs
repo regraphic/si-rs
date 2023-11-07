@@ -20,7 +20,7 @@ pub struct SiImage {
 
 #[wasm_bindgen]
 impl SiImage {
-    /// Creates a new SiImage from a vector of image data and a SiFont.
+    /// Creates a new SiImage from a vector of image data.
     ///
     /// # Arguments
     ///
@@ -186,7 +186,7 @@ impl SiImage {
     #[wasm_bindgen]
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut v = std::io::Cursor::new(Vec::new());
-        self.image
+        self.clone().image
             .write_to(&mut v, image::ImageFormat::Png)
             .expect("Could not write bytes");
         v.into_inner()
@@ -199,7 +199,7 @@ impl SiImage {
     /// The height of the image
     #[wasm_bindgen(getter)]
     pub fn height(&self) -> u32 {
-        self.height
+        self.clone().height
     }
 
     /// Gets the width of the image.
@@ -209,7 +209,7 @@ impl SiImage {
     /// The width of the image
     #[wasm_bindgen(getter)]
     pub fn width(&self) -> u32 {
-        self.width
+        self.clone().width
     }
 
     /// Resizes the image
