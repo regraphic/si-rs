@@ -1,6 +1,7 @@
-use ab_glyph::{FontVec, Font};
+use ab_glyph::{FontVec, Font, OutlinedGlyph};
 use reqwest;
 use wasm_bindgen::prelude::*;
+use crate::TextOptions;
 
 /// Represents a font used for text rendering.
 #[wasm_bindgen]
@@ -71,20 +72,17 @@ impl SiFont {
         panic!("blocking feature not enabled")
     }
     
-    pub(crate) fn layout(&self, text: &str, scale: f32, position: Position) -> Vec<PointedGlyph> {
-        let mut res: Vec<PointedGlyph> = Vec::new();
-        let mut tmp_x: f32 = position.x;
+    pub(crate) fn layout(&self, text: &str, scale: f32, position: Position, options: &TextOptions) -> Vec<OutlinedGlyph> {
+        let mut res: Vec<OutlinedGlyph> = Vec::new();
+        let mut tmp_x: f32 = position.0;
         for char in text.chars() {
             if char.is_whitespace() {
-                tmp_x += 10.0;
+                tmp_x += options.space_width;
             }
-            if let Some(glyph) = self.font.outline_glyph(self.font.glyph_id(char).with_scale_and_position(scale, ab_glyph::point(tmp_x, position.y))) {
+            if let Some(glyph) = self.font.outline_glyph(self.font.glyph_id(char).with_scale_and_position(scale, ab_glyph::point(tmp_x, position.1))) {
                 let bb = glyph.px_bounds();
-                let pointed_glyph = PointedGlyph {
-                    glyph
-                };
-                res.push(pointed_glyph);
-                tmp_x += bb.width() + 2.0;
+                res.push(glyph);
+                tmp_x += bb.width() + options.letter_spacing;
                 // tmp_y += bb.height();
             }
         }
@@ -92,11 +90,4 @@ impl SiFont {
     }
 }
 
-pub(crate) struct Position {
-    pub(crate) x: f32,
-    pub(crate) y: f32
-}
-
-pub(crate) struct PointedGlyph {
-    pub(crate) glyph: ab_glyph::OutlinedGlyph
-}
+pub type Position = (f32, f32);

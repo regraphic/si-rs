@@ -9,6 +9,24 @@ use wasm_bindgen::prelude::*;
 use crate::font::*;
 use crate::preset::*;
 
+#[wasm_bindgen]
+#[derive(Clone)]
+pub struct TextOptions {
+    pub letter_spacing: f32,
+    pub space_width: f32,
+}
+
+#[wasm_bindgen]
+impl TextOptions {
+    #[wasm_bindgen]
+    pub fn default() -> Self {
+        TextOptions {
+            letter_spacing: 2.0,
+            space_width: 10.0,
+        }
+    }
+}
+
 /// Represents an image with text rendering capabilities.
 #[wasm_bindgen]
 #[derive(Clone)]
@@ -125,6 +143,7 @@ impl SiImage {
         pos_y: f32,
         color: Option<String>,
         using_font: &SiFont,
+        options: &TextOptions,
     ) -> SiImage {
         let mut image = self.image.clone();
         let scale = text_scale;
@@ -137,8 +156,7 @@ impl SiImage {
             Some(c) => hex_to_rgb(&c).unwrap_or(Rgb([0, 0, 0])),
             None => Rgb([0, 0, 0]),
         };
-        for a in &using_font.layout(text, scale, Position {x: pos_x, y: pos_y + ascent}) {
-            let glyph = &a.glyph;
+        for glyph in &using_font.layout(text, scale, (pos_x, pos_y + ascent), options) {
             let bb = glyph.px_bounds();
             glyph.draw(|_x, _y, v| {
                 let x = _x as u32 + bb.min.x as u32;

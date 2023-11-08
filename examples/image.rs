@@ -1,6 +1,7 @@
 use si_img::{
     SiImage,
-    SiFont
+    SiFont,
+    TextOptions
 };
 
 use std::{
@@ -14,14 +15,15 @@ fn main() {
     // Create the font
     let font = SiFont::from_network("https://github.com/Zype-Z/ShareImage.js/raw/main/assets/fonts/sirin-stencil.ttf");
     // Render some text
-    // img.render_text("Hello, World!", 64.0, 480.0, 254.0, None, &font);
+    let text_options = TextOptions::default();
+    // img.render_text("Hello, World!", 64.0, 480.0, 254.0, None, &font, &text_options);
     // Render something else
-    // img.render_text("Hello, World!", 48.0, 480.0, 320.0, None, &font);
+    // img.render_text("Hello, World!", 48.0, 480.0, 320.0, None, &font, &text_options);
     // Or do chained
     img = img
         .clone()
-        .render_text("Hello, World!", 64.0, 480.0, 254.0, None, &font)
-        .render_text("Hello, Another!", 48.0, 480.0, 320.0, None, &font);
+        .render_text("Hello, World!", 64.0, 480.0, 254.0, None, &font, &text_options)
+        .render_text("Hello, Another!", 48.0, 480.0, 320.0, None, &font, &text_options);
     // Write it
     let mut file = fs::OpenOptions::new()
         .create(true) // To create a new file

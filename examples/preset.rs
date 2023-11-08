@@ -3,7 +3,8 @@ use std::{collections::HashMap, io::Write, fs};
 use si_img::{
     SiPreset,
     SiImage,
-    SiFont
+    SiFont,
+    TextOptions
 };
 
 fn main() {
@@ -40,8 +41,9 @@ fn main() {
             }
             None => panic!("No title provided")
         };
+        let text_options = TextOptions::default();
         // Render it
-        new_img.render_text(title, 64.0, 480.0, 254.0, None, &font)
+        new_img.render_text(title, 64.0, 480.0, 254.0, None, &font, &text_options)
     }));
 
     // Use it

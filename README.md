@@ -18,7 +18,7 @@ si-img = "0.4.0"
 To start using the Si crate, import the necessary modules:
 
 ```rust
-use si_img::{SiImage, SiFont};
+use si_img::{SiImage, SiFont, TextOptions};
 ```
 
 ## Creating a Font
@@ -37,12 +37,18 @@ Next, create an image using the `SiImage::from_network` constructor. You'll need
 let img = SiImage::from_network("Image_URL"); // Synchronously (blocking, use SiImage::from_network_async for async fetching)
 ```
 
+# Creating Text Options
+> As of v0.4, Text Options are required.
+```rs
+let text_options = TextOptions::default();
+```
+
 ## Adding Text to the Image
 
 Now, you can add text to the image using the `text` method. Specify the text, scale, x and y coordinates, an optional color (or use `None` for the default color), and the font you created earlier:
 
 ```rust
-img.text("Hello Cool User", 48.00, 32.0, 20.0, Some("#00ffff".to_string()), &font);
+img.text("Hello Cool User", 48.00, 32.0, 20.0, Some("#00ffff".to_string()), &font, &text_options);
 ```
 
 ## Getting Image Bytes
