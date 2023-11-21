@@ -1,11 +1,6 @@
-use std::{collections::HashMap, io::Write, fs};
+use std::{collections::HashMap, fs, io::Write};
 
-use si_img::{
-    SiPreset,
-    SiImage,
-    SiFont,
-    TextOptions
-};
+use si_img::{SiFont, SiImage, SiPreset, TextOptions};
 
 fn main() {
     // Create the preset
@@ -22,10 +17,14 @@ fn main() {
                     // Downcast it
                     font.downcast_ref::<SiFont>().unwrap()
                 } else {
-                    panic!("Expected type: {:?}\nFound type: {:?}", std::any::TypeId::of::<SiFont>(), font.type_id());
+                    panic!(
+                        "Expected type: {:?}\nFound type: {:?}",
+                        std::any::TypeId::of::<SiFont>(),
+                        font.type_id()
+                    );
                 }
             }
-            None => panic!("No font provided")
+            None => panic!("No font provided"),
         };
         // Render something on the image with that font
         // Get the title
@@ -36,10 +35,14 @@ fn main() {
                     // Downcast it
                     title.downcast_ref::<String>().unwrap()
                 } else {
-                    panic!("Expected type: {:?}\nFound type: {:?}", std::any::TypeId::of::<String>(), title.type_id());
+                    panic!(
+                        "Expected type: {:?}\nFound type: {:?}",
+                        std::any::TypeId::of::<String>(),
+                        title.type_id()
+                    );
                 }
             }
-            None => panic!("No title provided")
+            None => panic!("No title provided"),
         };
         let text_options = TextOptions::default();
         // Render it
@@ -50,17 +53,21 @@ fn main() {
     // Create the image
     let mut img = SiImage::from_network("https://res.cloudinary.com/zype/image/upload/regraphic");
     // Create the font
-    let font = SiFont::from_network("https://github.com/Zype-Z/ShareImage.js/raw/main/assets/fonts/sirin-stencil.ttf");
+    let font = SiFont::from_network(
+        "https://github.com/Zype-Z/ShareImage.js/raw/main/assets/fonts/sirin-stencil.ttf",
+    );
     let font_val: Box<dyn std::any::Any> = Box::new(font);
     let title_val: Box<dyn std::any::Any> = Box::new("Hello, World!".to_string());
     let values: HashMap<String, Box<dyn std::any::Any>> = HashMap::from([
         ("font".to_string(), font_val),
-        ("title".to_string(), title_val)]);
+        ("title".to_string(), title_val),
+    ]);
     img.load_preset(preset, values);
     let mut file = fs::OpenOptions::new()
-    .create(true) // To create a new file
-    .write(true)
-    // either use the ? operator or unwrap since it returns a Result
-    .open("out.png").unwrap();
+        .create(true) // To create a new file
+        .write(true)
+        // either use the ? operator or unwrap since it returns a Result
+        .open("out.png")
+        .unwrap();
     let _ = file.write_all(&img.to_bytes()).unwrap();
 }

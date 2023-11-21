@@ -1,12 +1,12 @@
-use ab_glyph::{FontVec, Font, OutlinedGlyph};
+use crate::TextOptions;
+use ab_glyph::{Font, FontVec, OutlinedGlyph};
 use reqwest;
 use wasm_bindgen::prelude::*;
-use crate::TextOptions;
 
 /// Represents a font used for text rendering.
 #[wasm_bindgen]
 pub struct SiFont {
-    pub(crate)font: FontVec
+    pub(crate) font: FontVec,
 }
 
 #[wasm_bindgen]
@@ -40,7 +40,7 @@ impl SiFont {
             .expect("Could not extract font")
             .into();
         let font = FontVec::try_from_vec(font_data).unwrap();
-        return Ok(SiFont { font });
+        Ok(SiFont { font })
     }
 
     /// Placeholder method for when async feature is not enabled.
@@ -71,15 +71,25 @@ impl SiFont {
     pub fn from_network(url: &str) {
         panic!("blocking feature not enabled")
     }
-    
-    pub(crate) fn layout(&self, text: &str, scale: f32, position: Position, options: &TextOptions) -> Vec<OutlinedGlyph> {
+
+    pub(crate) fn layout(
+        &self,
+        text: &str,
+        scale: f32,
+        position: Position,
+        options: &TextOptions,
+    ) -> Vec<OutlinedGlyph> {
         let mut res: Vec<OutlinedGlyph> = Vec::new();
         let mut tmp_x: f32 = position.0;
         for char in text.chars() {
             if char.is_whitespace() {
                 tmp_x += options.space_width;
             }
-            if let Some(glyph) = self.font.outline_glyph(self.font.glyph_id(char).with_scale_and_position(scale, ab_glyph::point(tmp_x, position.1))) {
+            if let Some(glyph) = self.font.outline_glyph(
+                self.font
+                    .glyph_id(char)
+                    .with_scale_and_position(scale, ab_glyph::point(tmp_x, position.1)),
+            ) {
                 let bb = glyph.px_bounds();
                 res.push(glyph);
                 tmp_x += bb.width() + options.letter_spacing;

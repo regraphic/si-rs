@@ -1,7 +1,7 @@
 use ab_glyph::{Font, ScaleFont};
 use image::{
     imageops::{overlay, resize},
-    DynamicImage, GenericImageView, Rgba, Rgb, GenericImage
+    DynamicImage, GenericImage, GenericImageView, Rgb, Rgba,
 };
 use reqwest;
 use wasm_bindgen::prelude::*;
@@ -147,9 +147,7 @@ impl SiImage {
     ) -> SiImage {
         let mut image = self.image.clone();
         let scale = text_scale;
-        let font = &using_font
-            .font
-            .as_scaled(scale);
+        let font = &using_font.font.as_scaled(scale);
         let ascent = font.ascent();
 
         let parsed_color = match color.clone() {
@@ -163,17 +161,14 @@ impl SiImage {
                 let y = _y as u32 + bb.min.y as u32;
                 let pixel = image.get_pixel(x as u32, y as u32);
                 let new_pixel = Rgba([
-                    (((parsed_color[0] as f32 * (v)) as f32) + (pixel[0] as f32 * (1.0 - v)))
-                        as u8,
-                    ((parsed_color[1] as f32 * (v)) as f32 + (pixel[1] as f32 * (1.0 - v)))
-                        as u8,
-                    ((parsed_color[2] as f32 * (v)) as f32 + (pixel[2] as f32 * (1.0 - v)))
-                        as u8,
+                    (((parsed_color[0] as f32 * (v)) as f32) + (pixel[0] as f32 * (1.0 - v))) as u8,
+                    ((parsed_color[1] as f32 * (v)) as f32 + (pixel[1] as f32 * (1.0 - v))) as u8,
+                    ((parsed_color[2] as f32 * (v)) as f32 + (pixel[2] as f32 * (1.0 - v))) as u8,
                     255 as u8,
                 ]);
                 image.put_pixel(x as u32, y as u32, new_pixel);
-        });
-    }
+            });
+        }
 
         let _ = std::mem::replace(&mut self.image, image);
         self
@@ -204,7 +199,8 @@ impl SiImage {
     #[wasm_bindgen]
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut v = std::io::Cursor::new(Vec::new());
-        self.clone().image
+        self.clone()
+            .image
             .write_to(&mut v, image::ImageFormat::Png)
             .expect("Could not write bytes");
         v.into_inner()
@@ -258,7 +254,11 @@ impl SiImage {
 impl SiImage {
     /// Load a preset.
     /// **NOTE**: It doesn't work in WASM. Only for direct usage.
-    pub fn load_preset(&mut self, preset: Box<SiPreset>, values: std::collections::HashMap<String, Box<dyn std::any::Any>>) -> &mut SiImage {
+    pub fn load_preset(
+        &mut self,
+        preset: Box<SiPreset>,
+        values: std::collections::HashMap<String, Box<dyn std::any::Any>>,
+    ) -> &mut SiImage {
         let res = (preset.cb)(self, values);
         let _ = std::mem::replace(self, res);
         self
