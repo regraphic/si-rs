@@ -1,6 +1,5 @@
 use crate::TextOptions;
 use ab_glyph::{Font, FontVec, OutlinedGlyph};
-use reqwest;
 use wasm_bindgen::prelude::*;
 
 /// Represents a font used for text rendering.

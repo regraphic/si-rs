@@ -1,4 +1,4 @@
-use si_img::{anymap, preset};
+use si_img::{anymap, preset, render};
 
 use std::{collections::HashMap, fs, io::Write};
 
@@ -9,9 +9,10 @@ fn main() {
     preset! {
         my_preset(img, font: SiFont, title: String, tagline: String) {
             println!("{}", title);
-            img
-                .render_text(title, 64.0, 480.0, 254.0, None, &font, &TextOptions::default())
-                .render_text(tagline, 48.0, 480.0, 320.0, Some(String::from("#FFFFFF")), &font, &TextOptions::default())
+            let mut new = img;
+            render!(new: title; 480.0, 254.0; "font" &font, "scale" 64.0, "opts" &TextOptions::default(), "color" None);
+            render!(new: tagline; 480.0, 320.0; "font" &font, "scale" 48.0, "opts" &TextOptions::default(), "color" Some(String::from("#FFFFFF")));
+            new
         }
     };
 
@@ -36,5 +37,5 @@ fn main() {
         // either use the ? operator or unwrap since it returns a Result
         .open("out.png")
         .unwrap();
-    let _ = file.write_all(&img.to_bytes()).unwrap();
+    file.write_all(&img.to_bytes()).unwrap();
 }

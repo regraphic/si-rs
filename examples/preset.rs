@@ -46,7 +46,7 @@ fn main() {
         };
         let text_options = TextOptions::default();
         // Render it
-        new_img.render_text(title, 64.0, 480.0, 254.0, None, &font, &text_options)
+        new_img.render_text(title, 64.0, 480.0, 254.0, None, font, &text_options)
     }));
 
     // Use it
@@ -69,5 +69,5 @@ fn main() {
         // either use the ? operator or unwrap since it returns a Result
         .open("out.png")
         .unwrap();
-    let _ = file.write_all(&img.to_bytes()).unwrap();
+    file.write_all(&img.to_bytes()).unwrap();
 }

@@ -3,7 +3,6 @@ use image::{
     imageops::{overlay, resize},
     DynamicImage, GenericImage, GenericImageView, Rgb, Rgba,
 };
-use reqwest;
 use wasm_bindgen::prelude::*;
 
 use crate::font::*;
@@ -136,7 +135,7 @@ impl SiImage {
     /// A mutable instance of the main image, with the text rendered on it.
     #[wasm_bindgen(js_name = "text")]
     pub fn render_text(
-        mut self,
+        self,
         text: &str,
         text_scale: f32,
         pos_x: f32,
@@ -145,33 +144,33 @@ impl SiImage {
         using_font: &SiFont,
         options: &TextOptions,
     ) -> SiImage {
-        let mut image = self.image.clone();
-        let scale = text_scale;
-        let font = &using_font.font.as_scaled(scale);
+        let mut image = self.image.clone(); // Clone the image explicitly for the method
+        let font = &using_font.font.as_scaled(text_scale);
         let ascent = font.ascent();
 
-        let parsed_color = match color.clone() {
-            Some(c) => hex_to_rgb(&c).unwrap_or(Rgb([0, 0, 0])),
+        let parsed_color = match color.as_ref() {
+            Some(c) => hex_to_rgb(c).unwrap_or_else(|| {
+                // Log an error, if necessary
+                eprintln!("Invalid color hex: {}", c);
+                Rgb([0, 0, 0])
+            }),
             None => Rgb([0, 0, 0]),
         };
-        for glyph in &using_font.layout(text, scale, (pos_x, pos_y + ascent), options) {
+
+        for glyph in &using_font.layout(text, text_scale, (pos_x, pos_y + ascent), options) {
             let bb = glyph.px_bounds();
             glyph.draw(|_x, _y, v| {
-                let x = _x as u32 + bb.min.x as u32;
-                let y = _y as u32 + bb.min.y as u32;
-                let pixel = image.get_pixel(x as u32, y as u32);
-                let new_pixel = Rgba([
-                    (((parsed_color[0] as f32 * (v)) as f32) + (pixel[0] as f32 * (1.0 - v))) as u8,
-                    ((parsed_color[1] as f32 * (v)) as f32 + (pixel[1] as f32 * (1.0 - v))) as u8,
-                    ((parsed_color[2] as f32 * (v)) as f32 + (pixel[2] as f32 * (1.0 - v))) as u8,
-                    255 as u8,
-                ]);
-                image.put_pixel(x as u32, y as u32, new_pixel);
+                let x = _x + bb.min.x as u32;
+                let y = _y + bb.min.y as u32;
+                if x < image.width() && y < image.height() {
+                    let pixel = image.get_pixel(x, y);
+                    let new_pixel = blend_pixel(&pixel, parsed_color, v);
+                    image.put_pixel(x, y, new_pixel);
+                }
             });
         }
 
-        let _ = std::mem::replace(&mut self.image, image);
-        self
+        SiImage { image, height: self.height, width: self.width }
     }
 
     /// Renders some image into the image
@@ -263,6 +262,20 @@ impl SiImage {
         let _ = std::mem::replace(self, res);
         self
     }
+}
+
+/// Helper function to blend colors
+fn blend_pixel(base_pixel: &Rgba<u8>, color: Rgb<u8>, alpha: f32) -> Rgba<u8> {
+    Rgba([
+        blend_channel(base_pixel[0], color[0], alpha),
+        blend_channel(base_pixel[1], color[1], alpha),
+        blend_channel(base_pixel[2], color[2], alpha),
+        255,
+    ])
+}
+
+fn blend_channel(base: u8, overlay: u8, alpha: f32) -> u8 {
+    ((overlay as f32 * alpha) + (base as f32 * (1.0 - alpha))) as u8
 }
 
 /// Converts a hexadecimal color code to an RGB color.

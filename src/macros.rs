@@ -35,3 +35,10 @@ macro_rules! anymap {
         }
     };
 }
+
+#[macro_export]
+macro_rules! render {
+    ($image:ident: $text:expr; $x:expr, $y:expr; "font" $font:expr, "scale" $scale:expr, "opts" $opts:expr, "color" $color:expr) => {
+        $image = $image.render_text($text, $scale, $x, $y, $color, $font, $opts);
+    };
+}

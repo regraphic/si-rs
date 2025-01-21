@@ -41,5 +41,5 @@ fn main() {
         .write(true) // To write
         .open("out.png")
         .unwrap();
-    let _ = file.write_all(&img.to_bytes()).unwrap();
+    file.write_all(&img.to_bytes()).unwrap();
 }
