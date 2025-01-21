@@ -13,7 +13,8 @@ To use the Si crate in your Rust project, add it as a dependency in your `Cargo.
 si-img = "0.4.0"
 ```
 
-> [!NOTE] Due to some reasons, there has been no updates to this project for about a year now. But I've finally returned to it,
+> [!WARNING]
+> Due to some reasons, there has been no updates to this project for about a year now. But I've finally returned to it,
 and I plan on making various changes pretty soon. So, be prepared for the future versions to lose backwards-compatibility real soon!
 
 ## Getting Started
