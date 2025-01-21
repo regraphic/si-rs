@@ -17,6 +17,9 @@ si-img = "0.4.0"
 > Due to some reasons, there has been no updates to this project for about a year now. But I've finally returned to it,
 and I plan on making various changes pretty soon. So, be prepared for the future versions to lose backwards-compatibility real soon!
 
+> [!NOTE]
+> The v1, which I already have planned, is where this library will finally stabilize, and all backwards-incompatible changes will seize!
+
 ## Getting Started
 
 To start using the Si crate, import the necessary modules:
