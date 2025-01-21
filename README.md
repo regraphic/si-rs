@@ -1,4 +1,4 @@
-# Si Crate - Simple Image Manipulation in Rust
+# Si - Simple Image Manipulation in Rust
 
 The Si crate (pronounced "ess-eye") is a lightweight and easy-to-use Rust library to create Social Share Images (the website previews you see, for example).
 
@@ -12,6 +12,9 @@ To use the Si crate in your Rust project, add it as a dependency in your `Cargo.
 [dependencies]
 si-img = "0.4.0"
 ```
+
+> [!NOTE] Due to some reasons, there has been no updates to this project for about a year now. But I've finally returned to it,
+and I plan on making various changes pretty soon. So, be prepared for the future versions to lose backwards-compatibility real soon!
 
 ## Getting Started
 
@@ -39,7 +42,7 @@ let img = SiImage::from_network("Image_URL"); // Synchronously (blocking, use Si
 
 # Creating Text Options
 > As of v0.4, Text Options are required.
-```rs
+```rust
 let text_options = TextOptions::default();
 ```
 
